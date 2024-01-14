@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Writer's Top-Down Process Checklist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e7e7e7;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 1px solid #d3d3d3;
+            padding-bottom: 10px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #d3d3d3;
+            font-family: Arial, sans-serif;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 5px;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        #fileInput {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Writing Process Checklist</h1>
+
+    <div class="container">
+        <h2>Idea</h2>
+        <textarea id="idea" name="idea" placeholder="Describe your main concept here..."></textarea>
+    </div>
+
+    <div class="container">
+        <h2>Structure, Plot, World & Theme</h2>
+        <textarea id="structure" name="structure" placeholder="Outline the structure of your narrative here..."></textarea>
+        <textarea id="plot" name="plot" placeholder="Detail your plot developments here..."></textarea>
+        <textarea id="world_theme" name="world_theme"
+                placeholder="Describe the world and themes here..."></textarea>
+    </div>
+
+    <div class="container">
+        <h2>Character</h2>
+        <textarea id="character" name="character" placeholder="Develop your characters here..."></textarea>
+    </div>
+
+    <div class="container">
+        <h2>Chapters</h2>
+        <textarea id="chapters" name="chapters" placeholder="Plan your chapters here..."></textarea>
+    </div>
+
+    <div class="container">
+        <h2>Scenes</h2>
+        <textarea id="scenes" name="scenes" placeholder="Detail your scenes here..."></textarea>
+    </div>
+
+    <div class="container">
+        <h2>Editing</h2>
+        <textarea id="editing" name="editing" placeholder="Note your editing progress here..."></textarea>
+    </div>
+
+    <button type="button" onclick="saveData()">Download Data</button>
+    <button type="button" onclick="document.getElementById('fileInput').click()">Upload Data</button>
+    <input type="file" id="fileInput" style="display: none;" onchange="loadData(event)"/>
+    <script>
+        function saveData() {
+            var data = {
+                idea: document.getElementById('idea').value,
+                structure: document.getElementById('structure').value,
+                plot: document.getElementById('plot').value,
+                world_theme: document.getElementById('world_theme').value,
+                character: document.getElementById('character').value,
+                chapters: document.getElementById('chapters').value,
+                scenes: document.getElementById('scenes').value,
+                editing: document.getElementById('editing').value
+            };
+            var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'writing_process_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            alert('Your data has been saved to your downloads folder.');
+        }
+
+        function loadData(event) {
+            var file = event.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var data = JSON.parse(e.target.result);
+                    document.getElementById('idea').value = data.idea || '';
+                    document.getElementById('structure').value = data.structure || '';
+                    document.getElementById('plot').value = data.plot || '';
+                    document.getElementById('world_theme').value = data.world_theme || '';
+                    document.getElementById('character').value = data.character || '';
+                    document.getElementById('chapters').value = data.chapters || '';
+                    document.getElementById('scenes').value = data.scenes || '';
+                    document.getElementById('editing').value = data.editing || '';
+                    alert('Your data has been loaded.');
+                };
+                reader.readAsText(file);
+            }
+        }
+    </script>
+</body>
+</html>
+
